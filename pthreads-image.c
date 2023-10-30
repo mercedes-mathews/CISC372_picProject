@@ -100,7 +100,8 @@ void convolute(Image* srcImage,Image* destImage,Matrix algorithm){
     
     printf("Height [%d], Width [%d], BPP [%d]\n", srcImage->height, srcImage->width, srcImage->bpp);
     int chunkSize = (srcImage->height + (THREAD_COUNT - 1)) / THREAD_COUNT;
-    for(int i = 0; i < THREAD_COUNT; i++){
+    int i,j,k;
+    for(i = 0; i < THREAD_COUNT; i++){
         int rowStart = chunkSize * i;
         int rowEnd = rowStart + chunkSize - 1;
 
@@ -109,8 +110,8 @@ void convolute(Image* srcImage,Image* destImage,Matrix algorithm){
         thread_data_array[i].rowEnd = rowEnd;
         thread_data_array[i].srcImage = srcImage;
         thread_data_array[i].destImage = destImage;
-        for (int j = 0; j < 3; j++) {
-            for (int k = 0; k < 3; k++) {
+        for (j = 0; j < 3; j++) {
+            for (k = 0; k < 3; k++) {
                 thread_data_array[i].algorithm[j][k] = algorithm[j][k];
             }
         }
@@ -118,7 +119,7 @@ void convolute(Image* srcImage,Image* destImage,Matrix algorithm){
         pthread_create(&thread_handles[i], NULL, &applyFilter,(void*)&thread_data_array[i]);
         printf("Created thread [%d]\n", i);
     }
-    for (int i = 0; i < THREAD_COUNT; i++){
+    for (i = 0; i < THREAD_COUNT; i++){
         pthread_join(thread_handles[i], NULL);
         printf("Finished thread [%d]\n", i);
     }
