@@ -148,7 +148,7 @@ enum KernelTypes GetKernelType(char* type){
 //main:
 //argv is expected to take 2 arguments.  First is the source file name (can be jpg, png, bmp, tga).  Second is the lower case name of the algorithm.
 int main(int argc,char** argv){
-    long t1,t2;
+    long t1,t2,t3,t4;
     t1=time(NULL);
 
     stbi_set_flip_vertically_on_load(0); 
@@ -170,11 +170,16 @@ int main(int argc,char** argv){
     destImage.width=srcImage.width;
     destImage.data=malloc(sizeof(uint8_t)*destImage.width*destImage.bpp*destImage.height);
     convolute(&srcImage,&destImage,algorithms[type]);
-    stbi_write_png("output.png",destImage.width,destImage.height,destImage.bpp,destImage.data,destImage.bpp*destImage.width);
-    stbi_image_free(srcImage.data);
-    
-    free(destImage.data);
     t2=time(NULL);
-    printf("Took %ld seconds\n",t2-t1);
-   return 0;
+    printf("Image processing took %ld seconds\n",t2-t1);
+
+    stbi_write_png("output.png",destImage.width,destImage.height,destImage.bpp,destImage.data,destImage.bpp*destImage.width);
+    t3=time(NULL);
+    printf("Image write took %ld seconds\n",t3-t2);
+
+    stbi_image_free(srcImage.data);
+    free(destImage.data);
+    t4=time(NULL);
+    printf("Total execution took %ld seconds\n",t4-t1);
+    return 0;
 }
