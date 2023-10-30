@@ -11,7 +11,7 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 
-int THREAD_COUNT = 8;
+#define THREAD_COUNT 8
 
 //An array of kernel matrices to be used for image convolution.  
 //The indexes of these match the enumeration from the header file. ie. algorithms[BLUR] returns the kernel corresponding to a box blur.
@@ -76,16 +76,17 @@ void* applyFilter(void* threadarg) {
     int rowEnd = data->rowEnd;
     Image* srcImage = data->srcImage;
     Image* destImage = data->destImage;
-    Matrix algorithm = data->algorithm;
 
     int row, bit, pix;
-    for (row = rowStart; row < rowEnd && row < srcImage->height; row++) {
+    printf("Thread [%d] processing rows [%d] to [%d]\n", thread_id, rowStart, rowEnd);
+    for (row = rowStart; row <= rowEnd && row < srcImage->height; row++) {
         for (pix=0;pix<srcImage->width;pix++) {
             for (bit=0;bit<srcImage->bpp;bit++) {
-                destImage->data[Index(pix,row,srcImage->width,bit,srcImage->bpp)]=getPixelValue(srcImage,pix,row,bit,algorithm);
+                destImage->data[Index(pix,row,srcImage->width,bit,srcImage->bpp)]=getPixelValue(srcImage,pix,row,bit,data->algorithm);
             }
         }
     }
+    return NULL;
 }
 
 //convolute:  Applies a kernel matrix to an image using multiple threads
@@ -97,6 +98,7 @@ void convolute(Image* srcImage,Image* destImage,Matrix algorithm){
     pthread_t* thread_handles;
     thread_handles = (pthread_t*)malloc(THREAD_COUNT*sizeof(pthread_t));
     
+    printf("Height [%d], Width [%d], BPP [%d]\n", srcImage->height, srcImage->width, srcImage->bpp);
     int chunkSize = (srcImage->height + (THREAD_COUNT - 1)) / THREAD_COUNT;
     for(int i = 0; i < THREAD_COUNT; i++){
         int rowStart = chunkSize * i;
@@ -107,14 +109,18 @@ void convolute(Image* srcImage,Image* destImage,Matrix algorithm){
         thread_data_array[i].rowEnd = rowEnd;
         thread_data_array[i].srcImage = srcImage;
         thread_data_array[i].destImage = destImage;
-        thread_data_array[i].algorithm = algorithm;
+        for (int j = 0; j < 3; j++) {
+            for (int k = 0; k < 3; k++) {
+                thread_data_array[i].algorithm[j][k] = algorithm[j][k];
+            }
+        }
 
         pthread_create(&thread_handles[i], NULL, &applyFilter,(void*)&thread_data_array[i]);
-        printf("Created thread [%d]", i);
+        printf("Created thread [%d]\n", i);
     }
     for (int i = 0; i < THREAD_COUNT; i++){
         pthread_join(thread_handles[i], NULL);
-        printf("Finished thread [%d]", i);
+        printf("Finished thread [%d]\n", i);
     }
     free(thread_handles);
 }
