@@ -110,9 +110,11 @@ void convolute(Image* srcImage,Image* destImage,Matrix algorithm){
         thread_data_array[i].algorithm = algorithm;
 
         pthread_create(&thread_handles[i], NULL, &applyFilter,(void*)&thread_data_array[i]);
+        printf("Created thread [%d]", i);
     }
     for (int i = 0; i < THREAD_COUNT; i++){
         pthread_join(thread_handles[i], NULL);
+        printf("Finished thread [%d]", i);
     }
     free(thread_handles);
 }
