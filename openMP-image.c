@@ -91,7 +91,7 @@ void applyFilter(Image* srcImage, Image* destImage, Matrix algorithm) {
 //            algorithm: The kernel matrix to use for the convolution
 //Returns: Nothing
 void convolute(Image* srcImage,Image* destImage,Matrix algorithm){
-    printf("Height [%d], Width [%d], BPP [%d]\n", srcImage->height, srcImage->width, srcImage->bpp);
+    printf("Executing OpenMP version against image with height [%d] and width [%d]\n", srcImage->height, srcImage->width);
 
     #pragma omp parallel num_threads(THREAD_COUNT)
     applyFilter(srcImage, destImage, algorithm);

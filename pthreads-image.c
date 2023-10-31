@@ -98,7 +98,7 @@ void convolute(Image* srcImage,Image* destImage,Matrix algorithm){
     pthread_t* thread_handles;
     thread_handles = (pthread_t*)malloc(THREAD_COUNT*sizeof(pthread_t));
     
-    printf("Height [%d], Width [%d], BPP [%d]\n", srcImage->height, srcImage->width, srcImage->bpp);
+    printf("Executing pthreads version against image with height [%d] and width [%d]\n", srcImage->height, srcImage->width);
     int chunkSize = (srcImage->height + (THREAD_COUNT - 1)) / THREAD_COUNT;
     int i,j,k;
     for(i = 0; i < THREAD_COUNT; i++){
