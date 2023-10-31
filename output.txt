@@ -1,0 +1,56 @@
+Script started on Mon Oct 30 20:51:37 2023
+]0;mmathews@r1n09.darwin:~/mmathews/CISC372_picProject[?1034h[mmathews@r1n09 CISC372_picProject]$ export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+]0;mmathews@r1n09.darwin:~/mmathews/CISC372_picProject[mmathews@r1n09 CISC372_picProject]$ srun ./openMP.out pic1.jpg edge
+Executing OpenMP version against image with height [3024] and width [4032]
+Thread [2] processing rows [756] to [1133]
+Thread [5] processing rows [1890] to [2267]
+Thread [4] processing rows [1512] to [1889]
+Thread [1] processing rows [378] to [755]
+Thread [3] processing rows [1134] to [1511]
+Thread [0] processing rows [0] to [377]
+Thread [7] processing rows [2646] to [3023]
+Thread [6] processing rows [2268] to [2645]
+Finished thread [6]
+Finished thread [2]
+Finished thread [5]
+Finished thread [7]
+Finished thread [1]
+Finished thread [3]
+Finished thread [4]
+Finished thread [0]
+Image processing took 1 seconds
+Image write took 5 seconds
+Total execution took 6 seconds
+]0;mmathews@r1n09.darwin:~/mmathews/CISC372_picProject[mmathews@r1n09 CISC372_picProject]$ srun ./openMP.out pic1.jpg edge[1P[1P[1P[1P[1P[1P[1@p[1@t[1@h[1@r[1@e[1@a[1@d[1@s
+Executing pthreads version against image with height [3024] and width [4032]
+Created thread [0]
+Created thread [1]
+Created thread [2]
+Thread [0] processing rows [0] to [377]
+Created thread [3]
+Thread [1] processing rows [378] to [755]
+Thread [2] processing rows [756] to [1133]
+Thread [3] processing rows [1134] to [1511]
+Created thread [4]
+Created thread [5]
+Created thread [6]
+Created thread [7]
+Thread [6] processing rows [2268] to [2645]
+Thread [7] processing rows [2646] to [3023]
+Thread [4] processing rows [1512] to [1889]
+Thread [5] processing rows [1890] to [2267]
+Finished thread [0]
+Finished thread [1]
+Finished thread [2]
+Finished thread [3]
+Finished thread [4]
+Finished thread [5]
+Finished thread [6]
+Finished thread [7]
+Image processing took 1 seconds
+Image write took 6 seconds
+Total execution took 7 seconds
+]0;mmathews@r1n09.darwin:~/mmathews/CISC372_picProject[mmathews@r1n09 CISC372_picProject]$ exit
+exit
+
+Script done on Mon Oct 30 20:52:23 2023
